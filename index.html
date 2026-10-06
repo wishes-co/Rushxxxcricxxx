@@ -1,0 +1,2139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>RUSH CRIC 🏏</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Arial,Helvetica,sans-serif;
+background:linear-gradient(135deg,#03170d,#07552f,#0b7b45);
+color:white;
+min-height:100vh;
+}
+button,input,select{font:inherit}
+button{cursor:pointer}
+
+header{
+text-align:center;
+padding:18px 10px;
+background:rgba(0,0,0,.35);
+}
+.logo{
+font-size:34px;
+font-weight:900;
+letter-spacing:2px;
+}
+.logo span{color:#ffd83d}
+
+.container{
+max-width:900px;
+margin:auto;
+padding:15px;
+}
+
+.card{
+background:rgba(0,0,0,.3);
+border:1px solid rgba(255,255,255,.12);
+border-radius:18px;
+padding:20px;
+margin-bottom:15px;
+box-shadow:0 12px 35px rgba(0,0,0,.2);
+}
+
+.hidden{display:none!important}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:12px;
+}
+
+@media(max-width:600px){
+.grid{grid-template-columns:1fr}
+}
+
+input,select{
+width:100%;
+padding:13px;
+border:0;
+border-radius:10px;
+background:white;
+color:#111;
+margin-top:5px;
+}
+
+.btn{
+width:100%;
+border:0;
+padding:14px;
+border-radius:12px;
+background:#19b866;
+color:white;
+font-weight:800;
+margin-top:10px;
+}
+
+.btn.secondary{background:#1769aa}
+.btn.gold{background:#d99d00}
+.btn.red{background:#c52e3b}
+.btn.dark{background:#18231f}
+
+.number-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+margin-top:15px;
+}
+
+.num{
+border:0;
+border-radius:14px;
+padding:18px;
+background:#0c8e55;
+color:white;
+font-size:24px;
+font-weight:900;
+}
+
+.scoreboard{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:8px;
+text-align:center;
+}
+
+.scorebox{
+background:rgba(255,255,255,.08);
+border-radius:12px;
+padding:12px;
+}
+
+.big{
+font-size:30px;
+font-weight:900;
+}
+
+.small{
+opacity:.75;
+font-size:13px;
+}
+
+.commentary{
+min-height:70px;
+background:#02150d;
+border-radius:12px;
+padding:14px;
+margin-top:12px;
+font-weight:700;
+border-left:4px solid #ffd83d;
+}
+
+.ball-row{
+display:flex;
+gap:6px;
+flex-wrap:wrap;
+margin-top:10px;
+}
+
+.ball{
+width:36px;
+height:36px;
+border-radius:50%;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#eee;
+color:#111;
+font-weight:bold;
+}
+
+.ball.out{
+background:#e63946;
+color:white;
+}
+
+.ball.four{
+background:#2584d9;
+color:white;
+}
+
+.ball.six{
+background:#9d4edd;
+color:white;
+}
+
+.stats-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:8px;
+}
+
+.stat{
+background:rgba(255,255,255,.07);
+border-radius:12px;
+padding:12px;
+text-align:center;
+}
+
+.stat b{
+display:block;
+font-size:23px;
+color:#ffd83d;
+}
+
+.badges{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+}
+
+.badge{
+padding:8px 12px;
+border-radius:20px;
+background:#244b39;
+border:1px solid #5c8f74;
+}
+
+.badge.locked{
+opacity:.35;
+filter:grayscale(1);
+}
+
+.record{
+background:rgba(255,255,255,.07);
+border-radius:12px;
+padding:12px;
+margin:8px 0;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+td,th{
+padding:9px 5px;
+border-bottom:1px solid rgba(255,255,255,.1);
+text-align:left;
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:8px;
+flex-wrap:wrap;
+}
+
+.coin{
+background:#d99d00;
+padding:8px 12px;
+border-radius:20px;
+font-weight:bold;
+}
+
+.profile-name{
+color:#ffd83d;
+}
+
+.result{
+text-align:center;
+font-size:30px;
+font-weight:900;
+padding:20px;
+}
+
+#winnerText{
+color:#ffd83d;
+}
+
+.overs-info{
+text-align:center;
+margin-top:10px;
+opacity:.8;
+}
+
+.footer{
+text-align:center;
+opacity:.5;
+padding:20px;
+font-size:12px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="logo">RUSH <span>CRIC</span> 🏏</div>
+<div class="small">Hand Cricket • You vs AI</div>
+</header>
+
+<div class="container">
+
+<!-- MENU -->
+<section id="menu" class="card">
+
+<div class="topbar">
+<h2>🏏 RUSH CRIC</h2>
+<div class="coin">
+🪙 <span id="coinDisplay">0</span>
+</div>
+</div>
+
+<label>Player Name</label>
+<input id="playerName" placeholder="Enter your name">
+
+<div class="grid" style="margin-top:12px">
+
+<div>
+<label>Overs</label>
+<select id="overs">
+<option value="1">1 Over</option>
+<option value="2" selected>2 Overs</option>
+<option value="3">3 Overs</option>
+<option value="5">5 Overs</option>
+<option value="10">10 Overs</option>
+<option value="20">20 Overs</option>
+</select>
+</div>
+
+<div>
+<label>Wickets per side</label>
+<select id="wicketsLimit">
+<option value="1" selected>1 Wicket</option>
+<option value="2">2 Wickets</option>
+<option value="3">3 Wickets</option>
+<option value="4">4 Wickets</option>
+<option value="5">5 Wickets</option>
+<option value="10">10 Wickets</option>
+</select>
+</div>
+
+<div>
+<label>AI Difficulty</label>
+<select id="difficulty">
+<option value="easy">Easy</option>
+<option value="normal" selected>Normal</option>
+<option value="hard">Hard</option>
+</select>
+</div>
+
+<div>
+<label>Sound</label>
+<select id="soundSetting">
+<option value="on" selected>🔊 On</option>
+<option value="off">🔇 Off</option>
+</select>
+</div>
+
+</div>
+
+<button class="btn" onclick="startGame()">
+🚀 START MATCH
+</button>
+
+<button class="btn secondary" onclick="showProfile()">
+👤 PLAYER PROFILE
+</button>
+
+<button class="btn gold" onclick="showRecords()">
+📚 GAME RECORDS
+</button>
+
+<button class="btn dark" onclick="showAchievements()">
+🏅 ACHIEVEMENTS
+</button>
+
+</section>
+
+
+<!-- TOSS -->
+<section id="tossScreen" class="card hidden">
+
+<h2>🪙 Toss Time</h2>
+
+<p id="tossInfo">
+Choose Heads or Tails.
+</p>
+
+<div class="grid">
+
+<button class="btn gold"
+onclick="toss('Heads')">
+🪙 HEADS
+</button>
+
+<button class="btn secondary"
+onclick="toss('Tails')">
+🪙 TAILS
+</button>
+
+</div>
+
+</section>
+
+
+<!-- DECISION -->
+<section id="decisionScreen" class="card hidden">
+
+<h2>🎯 Toss Result</h2>
+
+<div id="tossResult"></div>
+
+<div id="decisionButtons">
+
+<button class="btn"
+onclick="chooseBatting('bat')">
+🏏 BAT FIRST
+</button>
+
+<button class="btn secondary"
+onclick="chooseBatting('bowl')">
+🎯 BOWL FIRST
+</button>
+
+</div>
+
+</section>
+
+
+<!-- GAME -->
+<section id="gameScreen" class="hidden">
+
+<div class="card">
+
+<div class="topbar">
+
+<div>
+<b id="inningsTitle">1st Innings</b>
+<div class="small" id="battingText"></div>
+</div>
+
+<div class="coin">
+🪙 <span id="gameCoins">0</span>
+</div>
+
+</div>
+
+<div class="scoreboard">
+
+<div class="scorebox">
+<div class="small">RUNS</div>
+<div class="big" id="score">0</div>
+</div>
+
+<div class="scorebox">
+<div class="small">WICKETS</div>
+<div class="big" id="wickets">0</div>
+</div>
+
+<div class="scorebox">
+<div class="small">BALLS</div>
+<div class="big" id="balls">0</div>
+</div>
+
+</div>
+
+<div class="overs-info" id="overInfo">
+0.0 overs
+</div>
+
+<div class="commentary" id="commentary">
+Welcome to RUSH CRIC! 🏏
+</div>
+
+<div class="ball-row" id="ballHistory"></div>
+
+</div>
+
+
+<div class="card">
+
+<h3 id="actionTitle">
+Choose your number
+</h3>
+
+<div class="number-grid">
+
+<button class="num" onclick="play(1)">1</button>
+<button class="num" onclick="play(2)">2</button>
+<button class="num" onclick="play(3)">3</button>
+<button class="num" onclick="play(4)">4</button>
+<button class="num" onclick="play(5)">5</button>
+<button class="num" onclick="play(6)">6</button>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<h3>📊 Current Scorecard</h3>
+
+<table>
+
+<tr>
+<th>Batting</th>
+<td id="scoreBatting">You</td>
+</tr>
+
+<tr>
+<th>Runs</th>
+<td id="scoreRuns">0</td>
+</tr>
+
+<tr>
+<th>4s</th>
+<td id="scoreFours">0</td>
+</tr>
+
+<tr>
+<th>6s</th>
+<td id="scoreSixes">0</td>
+</tr>
+
+<tr>
+<th>Wickets Lost</th>
+<td id="scoreWickets">0</td>
+</tr>
+
+</table>
+
+</div>
+
+</section>
+
+
+<!-- RESULT -->
+<section id="resultScreen" class="card hidden">
+
+<div class="result">
+🏆 <span id="winnerText"></span>
+</div>
+
+<div id="rewardText"
+style="text-align:center">
+</div>
+
+<hr>
+
+<h3>📋 Final Scorecard</h3>
+
+<table>
+
+<tr>
+<th>You</th>
+<td id="resultUserScore"></td>
+</tr>
+
+<tr>
+<th>AI</th>
+<td id="resultAIScore"></td>
+</tr>
+
+<tr>
+<th>Result</th>
+<td id="resultResult"></td>
+</tr>
+
+<tr>
+<th>Coins Earned</th>
+<td id="resultCoins"></td>
+</tr>
+
+</table>
+
+<button class="btn"
+onclick="newMatch()">
+🔄 NEW MATCH
+</button>
+
+<button class="btn secondary"
+onclick="showRecords()">
+📚 GAME RECORDS
+</button>
+
+<button class="btn gold"
+onclick="showProfile()">
+👤 PROFILE
+</button>
+
+</section>
+
+
+<!-- PROFILE -->
+<section id="profileScreen" class="card hidden">
+
+<div class="topbar">
+<h2>👤 Player Profile</h2>
+
+<div class="coin">
+🪙 <span id="profileCoins">0</span>
+</div>
+</div>
+
+<h3 class="profile-name" id="profileName">
+Player
+</h3>
+
+<div class="stats-grid">
+
+<div class="stat">
+<b id="pMatches">0</b>
+Matches
+</div>
+
+<div class="stat">
+<b id="pWins">0</b>
+Wins
+</div>
+
+<div class="stat">
+<b id="pLosses">0</b>
+Losses
+</div>
+
+<div class="stat">
+<b id="pTies">0</b>
+Ties
+</div>
+
+<div class="stat">
+<b id="pRuns">0</b>
+Runs
+</div>
+
+<div class="stat">
+<b id="pWickets">0</b>
+Wickets
+</div>
+
+<div class="stat">
+<b id="pHighest">0</b>
+Highest
+</div>
+
+<div class="stat">
+<b id="pAverage">0.00</b>
+Average
+</div>
+
+<div class="stat">
+<b id="pStrike">0.00</b>
+Strike Rate
+</div>
+
+<div class="stat">
+<b id="pFours">0</b>
+4s
+</div>
+
+<div class="stat">
+<b id="pSixes">0</b>
+6s
+</div>
+
+<div class="stat">
+<b id="p30">0</b>
+30+
+</div>
+
+<div class="stat">
+<b id="p50">0</b>
+50+
+</div>
+
+<div class="stat">
+<b id="p100">0</b>
+100+
+</div>
+
+<div class="stat">
+<b id="pBalls">0</b>
+Balls
+</div>
+
+</div>
+
+<hr>
+
+<h3>🎯 Best Bowling</h3>
+
+<div id="bestBowling">
+No bowling record yet.
+</div>
+
+<button class="btn secondary"
+onclick="backMenu()">
+⬅️ BACK
+</button>
+
+</section>
+
+
+<!-- RECORDS -->
+<section id="recordsScreen" class="card hidden">
+
+<h2>📚 Game Records</h2>
+
+<div id="recordsList"></div>
+
+<button class="btn red"
+onclick="clearRecords()">
+🗑️ CLEAR ALL RECORDS
+</button>
+
+<button class="btn secondary"
+onclick="backMenu()">
+⬅️ BACK
+</button>
+
+</section>
+
+
+<!-- ACHIEVEMENTS -->
+<section id="achievementScreen" class="card hidden">
+
+<h2>🏅 Achievements</h2>
+
+<div class="badges" id="badges"></div>
+
+<button class="btn secondary"
+onclick="backMenu()">
+⬅️ BACK
+</button>
+
+</section>
+
+<div class="footer">
+RUSH CRIC 🏏 • Your Cricket. Your Rules.
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================
+   GAME SETTINGS
+========================= */
+
+let settings={
+overs:2,
+wicketsLimit:1,
+difficulty:"normal",
+sound:"on"
+};
+
+let innings=1;
+
+let userBatting=false;
+let initialUserBatting=false;
+
+let score=0;
+let wickets=0;
+let balls=0;
+
+let firstUserScore=0;
+let firstAIScore=0;
+
+let userScore=0;
+let aiScore=0;
+
+let userBatBalls=0;
+let userFours=0;
+let userSixes=0;
+
+let userBowlingBalls=0;
+let userBowlingWickets=0;
+
+let currentFours=0;
+let currentSixes=0;
+
+let ballHistory=[];
+
+let matchStarted=false;
+let matchFinished=false;
+
+
+/* =========================
+   STATS
+========================= */
+
+const defaultStats={
+matches:0,
+wins:0,
+losses:0,
+ties:0,
+runs:0,
+wickets:0,
+balls:0,
+fours:0,
+sixes:0,
+scores:[],
+coins:0,
+bowlingFigures:[],
+records:[]
+};
+
+let stats=
+JSON.parse(
+localStorage.getItem("rushCricStats")
+)||JSON.parse(JSON.stringify(defaultStats));
+
+
+function $(id){
+return document.getElementById(id);
+}
+
+function saveStats(){
+localStorage.setItem(
+"rushCricStats",
+JSON.stringify(stats)
+);
+}
+
+function updateCoins(){
+
+$("coinDisplay").textContent=stats.coins;
+$("gameCoins").textContent=stats.coins;
+$("profileCoins").textContent=stats.coins;
+
+}
+
+function getName(){
+
+return localStorage.getItem("rushCricName")
+||"RUSH PLAYER";
+
+}
+
+function hideAll(){
+
+[
+"menu",
+"tossScreen",
+"decisionScreen",
+"gameScreen",
+"resultScreen",
+"profileScreen",
+"recordsScreen",
+"achievementScreen"
+].forEach(id=>{
+$(id).classList.add("hidden");
+});
+
+}
+
+function backMenu(){
+
+hideAll();
+
+$("menu").classList.remove("hidden");
+
+updateCoins();
+
+}
+
+
+/* =========================
+   RESET
+========================= */
+
+function resetMatch(){
+
+innings=1;
+
+score=0;
+wickets=0;
+balls=0;
+
+firstUserScore=0;
+firstAIScore=0;
+
+userScore=0;
+aiScore=0;
+
+userBatBalls=0;
+userFours=0;
+userSixes=0;
+
+userBowlingBalls=0;
+userBowlingWickets=0;
+
+currentFours=0;
+currentSixes=0;
+
+ballHistory=[];
+
+userBatting=false;
+initialUserBatting=false;
+
+matchStarted=false;
+matchFinished=false;
+
+}
+
+
+/* =========================
+   START GAME
+========================= */
+
+function startGame(){
+
+settings.overs=
+Number($("overs").value);
+
+settings.wicketsLimit=
+Number($("wicketsLimit").value);
+
+settings.difficulty=
+$("difficulty").value;
+
+settings.sound=
+$("soundSetting").value;
+
+let name=
+$("playerName").value.trim();
+
+if(!name){
+name="RUSH PLAYER";
+$("playerName").value=name;
+}
+
+localStorage.setItem(
+"rushCricName",
+name
+);
+
+resetMatch();
+
+hideAll();
+
+$("tossScreen")
+.classList.remove("hidden");
+
+$("tossInfo").innerHTML=
+`<b>${name}</b>, choose Heads or Tails.<br>
+${settings.overs} over(s) •
+${settings.wicketsLimit} wicket(s)`;
+
+sound("toss");
+
+}
+
+
+/* =========================
+   TOSS
+========================= */
+
+function toss(choice){
+
+let result=
+Math.random()<0.5
+?"Heads"
+:"Tails";
+
+hideAll();
+
+$("decisionScreen")
+.classList.remove("hidden");
+
+$("tossResult").innerHTML=
+`🪙 You chose <b>${choice}</b><br>
+Toss: <b>${result}</b>`;
+
+if(choice===result){
+
+$("tossResult").innerHTML+=
+`<br><br>
+🎉 <b>You won the toss!</b>`;
+
+$("decisionButtons")
+.classList.remove("hidden");
+
+}else{
+
+$("tossResult").innerHTML+=
+`<br><br>
+🤖 <b>AI won the toss.</b>`;
+
+$("decisionButtons")
+.classList.add("hidden");
+
+setTimeout(()=>{
+
+let aiChoice=
+Math.random()<0.5
+?"bat"
+:"bowl";
+
+$("tossResult").innerHTML+=
+`<br>
+AI decided to
+<b>${aiChoice==="bat"
+?"BAT"
+:"BOWL"}</b>.`;
+
+setTimeout(()=>{
+chooseBatting(aiChoice);
+},700);
+
+},500);
+
+}
+
+sound("toss");
+
+}
+
+
+/* =========================
+   BAT/BOWL DECISION
+========================= */
+
+function chooseBatting(choice){
+
+userBatting=
+choice==="bat";
+
+/* FIX: remember first innings */
+initialUserBatting=
+userBatting;
+
+setupInnings();
+
+}
+
+
+/* =========================
+   SETUP INNINGS
+========================= */
+
+function setupInnings(){
+
+hideAll();
+
+$("gameScreen")
+.classList.remove("hidden");
+
+score=0;
+wickets=0;
+balls=0;
+
+currentFours=0;
+currentSixes=0;
+
+ballHistory=[];
+
+matchStarted=true;
+
+$("inningsTitle").textContent=
+innings===1
+?"1st Innings"
+:"2nd Innings";
+
+$("battingText").textContent=
+userBatting
+?"🏏 You are batting"
+:"🎯 You are bowling";
+
+$("actionTitle").textContent=
+userBatting
+?"Choose your batting number"
+:"Choose your bowling number";
+
+if(innings===2){
+
+let target=
+initialUserBatting
+?firstUserScore+1
+:firstAIScore+1;
+
+$("commentary").textContent=
+`🔥 Chase started! Target: ${target}`;
+
+}else{
+
+$("commentary").textContent=
+"🏏 Match started! Make your move.";
+
+}
+
+updateScore();
+updateBallHistory();
+
+}
+
+
+/* =========================
+   AI NUMBER
+========================= */
+
+function aiNumber(){
+
+if(settings.difficulty==="easy"){
+
+return Math.floor(
+Math.random()*6
+)+1;
+
+}
+
+if(settings.difficulty==="hard"){
+
+let numbers=[
+1,2,3,4,5,6,
+2,3,4,4,5,6
+];
+
+return numbers[
+Math.floor(
+Math.random()*numbers.length
+)
+];
+
+}
+
+return Math.floor(
+Math.random()*6
+)+1;
+
+}
+
+
+/* =========================
+   MAX BALLS
+========================= */
+
+function maxBalls(){
+
+return settings.overs*6;
+
+}
+
+
+/* =========================
+   PLAY
+========================= */
+
+function play(userNumber){
+
+if(!matchStarted||matchFinished)
+return;
+
+let ai=aiNumber();
+
+balls++;
+
+
+/* USER BATTING */
+
+if(userBatting){
+
+userBatBalls++;
+
+if(userNumber===ai){
+
+wickets++;
+
+ballHistory.push({
+type:"out",
+text:`OUT! You: ${userNumber} | AI: ${ai}`
+});
+
+commentary(
+`💥 OUT! You chose ${userNumber}, AI chose ${ai}.`
+);
+
+sound("out");
+
+}else{
+
+score+=userNumber;
+
+if(userNumber===4){
+
+currentFours++;
+userFours++;
+
+commentary("🔥 FOUR! Beautiful shot!");
+sound("four");
+
+}else if(userNumber===6){
+
+currentSixes++;
+userSixes++;
+
+commentary("🚀 SIX! Into the stands!");
+sound("six");
+
+}else{
+
+commentary(
+`🏏 You scored ${userNumber} run${userNumber>1?"s":""}.`
+);
+
+sound("hit");
+
+}
+
+ballHistory.push({
+type:
+userNumber===4
+?"four"
+:userNumber===6
+?"six"
+:"normal",
+
+text:
+`You: ${userNumber} | AI: ${ai}`
+});
+
+}
+
+}
+
+
+/* AI BATTING */
+
+else{
+
+userBowlingBalls++;
+
+if(userNumber===ai){
+
+wickets++;
+userBowlingWickets++;
+
+ballHistory.push({
+type:"out",
+text:`WICKET! You: ${userNumber} | AI: ${ai}`
+});
+
+commentary(
+`🎯 WICKET! You chose ${userNumber}, AI chose ${ai}.`
+);
+
+sound("out");
+
+}else{
+
+score+=ai;
+
+if(ai===4){
+
+commentary("💥 AI hit a FOUR!");
+sound("four");
+
+}else if(ai===6){
+
+commentary("🚀 AI hit a SIX!");
+sound("six");
+
+}else{
+
+commentary(
+`🤖 AI scored ${ai} run${ai>1?"s":""}.`
+);
+
+sound("hit");
+
+}
+
+ballHistory.push({
+type:
+ai===4
+?"four"
+:ai===6
+?"six"
+:"normal",
+
+text:
+`You: ${userNumber} | AI: ${ai}`
+});
+
+}
+
+}
+
+
+updateScore();
+updateBallHistory();
+
+
+/* =========================
+   CHASE CHECK
+========================= */
+
+if(innings===2){
+
+let target=
+initialUserBatting
+?firstUserScore
+:firstAIScore;
+
+/*
+If chasing side goes above target,
+the match is immediately finished.
+*/
+if(score>target){
+
+endInnings();
+return;
+
+}
+
+}
+
+
+/* =========================
+   NORMAL END
+========================= */
+
+if(
+balls>=maxBalls()||
+wickets>=settings.wicketsLimit
+){
+
+endInnings();
+
+}
+
+}
+
+
+/* =========================
+   COMMENTARY
+========================= */
+
+function commentary(text){
+
+$("commentary").textContent=text;
+
+}
+
+
+/* =========================
+   BALL HISTORY
+========================= */
+
+function updateBallHistory(){
+
+$("ballHistory").innerHTML="";
+
+ballHistory.forEach(b=>{
+
+let div=document.createElement("div");
+
+div.className="ball";
+
+if(b.type==="out")
+div.classList.add("out");
+
+if(b.type==="four")
+div.classList.add("four");
+
+if(b.type==="six")
+div.classList.add("six");
+
+if(b.type==="out")
+div.textContent="W";
+
+else if(b.type==="four")
+div.textContent="4";
+
+else if(b.type==="six")
+div.textContent="6";
+
+else{
+
+let match=
+b.text.match(
+/(?:You|AI).*?:\s*(\d)/
+);
+
+div.textContent=
+match
+?match[1]
+:"•";
+
+}
+
+$("ballHistory")
+.appendChild(div);
+
+});
+
+}
+
+
+/* =========================
+   SCORE UPDATE
+========================= */
+
+function updateScore(){
+
+$("score").textContent=score;
+
+$("wickets").textContent=wickets;
+
+$("balls").textContent=balls;
+
+let over=Math.floor(balls/6);
+let ball=balls%6;
+
+$("overInfo").textContent=
+`${over}.${ball} overs / ${settings.overs}.0`;
+
+$("scoreBatting").textContent=
+userBatting
+?"You"
+:"AI";
+
+$("scoreRuns").textContent=score;
+
+$("scoreFours").textContent=
+userBatting
+?currentFours
+:"-";
+
+$("scoreSixes").textContent=
+userBatting
+?currentSixes
+:"-";
+
+$("scoreWickets").textContent=
+wickets;
+
+}
+
+
+/* =========================
+   FIXED END INNINGS
+========================= */
+
+function endInnings(){
+
+/*
+=============================
+FIRST INNINGS
+=============================
+*/
+
+if(innings===1){
+
+if(userBatting){
+
+firstUserScore=score;
+
+}else{
+
+firstAIScore=score;
+
+}
+
+
+/*
+Start second innings.
+The batting side changes.
+*/
+
+innings=2;
+
+userBatting=!userBatting;
+
+setupInnings();
+
+return;
+
+}
+
+
+/*
+=============================
+SECOND INNINGS
+=============================
+*/
+
+if(innings===2){
+
+/*
+If user batted first:
+User score was already stored
+in firstUserScore.
+Current score belongs to AI.
+*/
+
+if(initialUserBatting){
+
+userScore=firstUserScore;
+
+aiScore=score;
+
+}
+
+
+/*
+If AI batted first:
+AI score was already stored
+in firstAIScore.
+Current score belongs to User.
+*/
+
+else{
+
+aiScore=firstAIScore;
+
+userScore=score;
+
+}
+
+
+/*
+IMPORTANT:
+Always finish the match here.
+*/
+
+finishMatch();
+
+}
+
+}
+
+
+/* =========================
+   COINS
+========================= */
+
+function calculateCoins(runs){
+
+if(runs>=100)return 10000;
+
+if(runs>=50)return 5000;
+
+if(runs>=40)return 4000;
+
+if(runs>=30)return 3000;
+
+if(runs>=20)return 2000;
+
+if(runs>=10)return 1000;
+
+return 0;
+
+}
+
+
+/* =========================
+   FINISH MATCH
+========================= */
+
+function finishMatch(){
+
+if(matchFinished)
+return;
+
+matchFinished=true;
+matchStarted=false;
+
+let winner="";
+
+
+if(userScore>aiScore){
+
+winner="YOU WIN 🏆";
+
+stats.wins++;
+
+sound("win");
+
+}else if(userScore<aiScore){
+
+winner="AI WINS 🤖";
+
+stats.losses++;
+
+sound("lose");
+
+}else{
+
+winner="MATCH TIED 🤝";
+
+stats.ties++;
+
+sound("win");
+
+}
+
+
+stats.matches++;
+
+stats.runs+=userScore;
+
+stats.balls+=userBatBalls;
+
+stats.fours+=userFours;
+
+stats.sixes+=userSixes;
+
+stats.wickets+=userBowlingWickets;
+
+stats.scores.push(userScore);
+
+
+let coins=
+calculateCoins(userScore);
+
+stats.coins+=coins;
+
+
+stats.bowlingFigures.push({
+
+wickets:userBowlingWickets,
+
+balls:userBowlingBalls,
+
+date:new Date().toLocaleString()
+
+});
+
+
+let record={
+
+date:new Date().toLocaleString(),
+
+name:getName(),
+
+user:userScore,
+
+ai:aiScore,
+
+result:winner,
+
+overs:settings.overs,
+
+wickets:settings.wicketsLimit,
+
+earned:coins
+
+};
+
+stats.records.unshift(record);
+
+stats.records=
+stats.records.slice(0,100);
+
+stats.scores=
+stats.scores.slice(-200);
+
+stats.bowlingFigures=
+stats.bowlingFigures.slice(-200);
+
+saveStats();
+
+updateCoins();
+
+
+/*
+RESULT SCREEN
+*/
+
+$("winnerText").textContent=
+winner;
+
+$("resultUserScore").textContent=
+`${userScore} runs`;
+
+$("resultAIScore").textContent=
+`${aiScore} runs`;
+
+$("resultResult").textContent=
+winner;
+
+$("resultCoins").textContent=
+`+${coins} 🪙`;
+
+$("rewardText").innerHTML=
+coins>0
+?`🎁 You earned <b>${coins} coins</b>!`
+:`Score 10+ runs to earn coins.`;
+
+hideAll();
+
+$("resultScreen")
+.classList.remove("hidden");
+
+}
+
+
+/* =========================
+   NEW MATCH
+========================= */
+
+function newMatch(){
+
+startGame();
+
+}
+
+
+/* =========================
+   PROFILE
+========================= */
+
+function showProfile(){
+
+hideAll();
+
+$("profileScreen")
+.classList.remove("hidden");
+
+let scores=stats.scores;
+
+let highest=
+scores.length
+?Math.max(...scores)
+:0;
+
+let average=
+scores.length
+?stats.runs/scores.length
+:0;
+
+let strike=
+stats.balls
+?stats.runs/stats.balls*100
+:0;
+
+$("profileName").textContent=getName();
+
+$("pMatches").textContent=stats.matches;
+
+$("pWins").textContent=stats.wins;
+
+$("pLosses").textContent=stats.losses;
+
+$("pTies").textContent=stats.ties;
+
+$("pRuns").textContent=stats.runs;
+
+$("pWickets").textContent=stats.wickets;
+
+$("pHighest").textContent=highest;
+
+$("pAverage").textContent=
+average.toFixed(2);
+
+$("pStrike").textContent=
+strike.toFixed(2);
+
+$("pFours").textContent=stats.fours;
+
+$("pSixes").textContent=stats.sixes;
+
+$("p30").textContent=
+scores.filter(x=>x>=30).length;
+
+$("p50").textContent=
+scores.filter(x=>x>=50).length;
+
+$("p100").textContent=
+scores.filter(x=>x>=100).length;
+
+$("pBalls").textContent=stats.balls;
+
+
+if(stats.bowlingFigures.length){
+
+let best=
+stats.bowlingFigures.reduce(
+(a,b)=>
+b.wickets>a.wickets
+?b
+:a
+);
+
+$("bestBowling").innerHTML=
+`<b>${best.wickets} wickets</b>
+in ${best.balls} balls`;
+
+}else{
+
+$("bestBowling").textContent=
+"No bowling record yet.";
+
+}
+
+}
+
+
+/* =========================
+   RECORDS
+========================= */
+
+function showRecords(){
+
+hideAll();
+
+$("recordsScreen")
+.classList.remove("hidden");
+
+if(!stats.records.length){
+
+$("recordsList").innerHTML=
+"<p>No matches played yet.</p>";
+
+return;
+
+}
+
+$("recordsList").innerHTML=
+stats.records.map(
+(r,i)=>`
+
+<div class="record">
+
+<b>
+#${stats.records.length-i}
+${r.result}
+</b>
+
+<br>
+
+🏏 ${r.name}:
+${r.user} runs
+
+<br>
+
+🤖 AI:
+${r.ai} runs
+
+<br>
+
+⚙️ ${r.overs} overs •
+${r.wickets} wicket(s)
+
+<br>
+
+🪙 +${r.earned} coins
+
+<br>
+
+<span class="small">
+${r.date}
+</span>
+
+</div>
+
+`
+).join("");
+
+}
+
+
+/* =========================
+   CLEAR RECORDS
+========================= */
+
+function clearRecords(){
+
+if(!confirm(
+"Clear all RUSH CRIC career stats?"
+))
+return;
+
+stats=
+JSON.parse(
+JSON.stringify(defaultStats)
+);
+
+saveStats();
+
+updateCoins();
+
+showRecords();
+
+}
+
+
+/* =========================
+   ACHIEVEMENTS
+========================= */
+
+function showAchievements(){
+
+hideAll();
+
+$("achievementScreen")
+.classList.remove("hidden");
+
+let scores=stats.scores;
+
+let achievements=[
+
+{
+icon:"🎮",
+name:"First Match",
+unlocked:stats.matches>=1
+},
+
+{
+icon:"🏆",
+name:"First Win",
+unlocked:stats.wins>=1
+},
+
+{
+icon:"🔥",
+name:"30+ Club",
+unlocked:scores.some(x=>x>=30)
+},
+
+{
+icon:"💥",
+name:"Half Century",
+unlocked:scores.some(x=>x>=50)
+},
+
+{
+icon:"👑",
+name:"Century",
+unlocked:scores.some(x=>x>=100)
+},
+
+{
+icon:"🚀",
+name:"10 Sixes",
+unlocked:stats.sixes>=10
+},
+
+{
+icon:"🎯",
+name:"10 Wickets",
+unlocked:stats.wickets>=10
+},
+
+{
+icon:"🪙",
+name:"10,000 Coins",
+unlocked:stats.coins>=10000
+},
+
+{
+icon:"🏏",
+name:"1000 Runs",
+unlocked:stats.runs>=1000
+}
+
+];
+
+
+$("badges").innerHTML=
+achievements.map(
+a=>`
+
+<div class="badge ${
+a.unlocked?"":"locked"
+}">
+
+${a.icon}
+${a.name}
+${a.unlocked?" ✅":" 🔒"}
+
+</div>
+
+`
+).join("");
+
+}
+
+
+/* =========================
+   SOUND
+========================= */
+
+let audioCtx=null;
+
+function getAudio(){
+
+if(audioCtx)
+return audioCtx;
+
+try{
+
+audioCtx=
+new(
+window.AudioContext||
+window.webkitAudioContext
+)();
+
+}catch(e){}
+
+return audioCtx;
+
+}
+
+function beep(
+frequency,
+duration,
+type="sine"
+){
+
+if(settings.sound==="off")
+return;
+
+let ctx=getAudio();
+
+if(!ctx)
+return;
+
+let osc=
+ctx.createOscillator();
+
+let gain=
+ctx.createGain();
+
+osc.type=type;
+
+osc.frequency.value=
+frequency;
+
+gain.gain.setValueAtTime(
+.0001,
+ctx.currentTime
+);
+
+gain.gain.exponentialRampToValueAtTime(
+.15,
+ctx.currentTime+.01
+);
+
+gain.gain.exponentialRampToValueAtTime(
+.0001,
+ctx.currentTime+duration
+);
+
+osc.connect(gain);
+gain.connect(ctx.destination);
+
+osc.start();
+
+osc.stop(
+ctx.currentTime+duration
+);
+
+}
+
+
+function sound(type){
+
+if(settings.sound==="off")
+return;
+
+switch(type){
+
+case"hit":
+
+beep(350,.08,"square");
+break;
+
+case"four":
+
+beep(550,.12,"square");
+
+setTimeout(()=>{
+beep(750,.12,"square");
+},90);
+
+break;
+
+case"six":
+
+beep(600,.12,"square");
+
+setTimeout(()=>{
+beep(800,.12,"square");
+},100);
+
+setTimeout(()=>{
+beep(1000,.18,"square");
+},200);
+
+break;
+
+case"out":
+
+beep(180,.18,"sawtooth");
+
+setTimeout(()=>{
+beep(100,.25,"sawtooth");
+},130);
+
+break;
+
+case"toss":
+
+beep(500,.08);
+
+setTimeout(()=>{
+beep(700,.08);
+},100);
+
+break;
+
+case"win":
+
+beep(500,.1,"square");
+
+setTimeout(()=>{
+beep(650,.1,"square");
+},120);
+
+setTimeout(()=>{
+beep(850,.2,"square");
+},240);
+
+break;
+
+case"lose":
+
+beep(350,.15);
+
+setTimeout(()=>{
+beep(220,.25);
+},150);
+
+break;
+
+}
+
+}
+
+
+/* =========================
+   LOAD PLAYER
+========================= */
+
+let savedName=
+localStorage.getItem("rushCricName");
+
+if(savedName){
+
+$("playerName").value=
+savedName;
+
+}
+
+updateCoins();
+
+</script>
+
+</body>
+</html>
